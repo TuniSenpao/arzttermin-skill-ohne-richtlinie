@@ -1,0 +1,1 @@
+# arzttermin-skill-ohne-richtlinie
