@@ -1,0 +1,6 @@
+der (arzttermin|termin) ist um {time} uhr am {date} bei {name}
+{time} uhr am {date} bei {name}
+ich habe (ihn|den) (arzttermin|termin|) (am {date}| um {time}) (am {date}| um {time}) bei {name}
+(der|mein|er) (termin|arzttermin|) ist am {date} 
+(der|mein|er) (termin|arzttermin|) ist um {time} uhr
+(der|mein|er) (termin|arzttermin|) ist bei {name}

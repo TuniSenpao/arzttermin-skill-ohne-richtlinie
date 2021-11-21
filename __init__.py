@@ -282,11 +282,9 @@ class ArztterminSkillOhneRichtlinie(MycroftSkill):
 
     @intent_handler('Reminder.intent')
     def add_unspecified_reminder(self, msg=None):
-        """Starts a dialog to add a reminder when no time was supplied."""
-        # TODO: sollte vlt möglich sein dem Termin einen eigenen Namen zu geben bzw. Name des Arztes wird als Name genutzt
-        reminder = 'arzttermin' 
-        
-        
+        self.speak_dialog('RequestAllInformations', expect_response=True)
+
+        """
         # TIME:
         time_response = self.get_response('ParticularTime', on_fail='wait.for.answer', num_retries=10)
         # Check if a time was in the response
@@ -324,6 +322,8 @@ class ArztterminSkillOhneRichtlinie(MycroftSkill):
             month = [m for m in months if(m in date_response)]
             date = day[-1] + '. ' + month[-1]
 
+
+        
         # NAME:
         # name = self.get_response('ParticularName', on_fail='wait.for.answer', num_retries=5)
         name = self.get_response('ParticularName', on_fail='wait.for.answer', num_retries=10)
@@ -361,13 +361,13 @@ class ArztterminSkillOhneRichtlinie(MycroftSkill):
             month = [m for m in months if(m in date_response.lower())]
 
             if (bool(day) and bool(month)):
-                date = day[-1] + '. ' + month[-1]
+                date = day[-1] + '. ' + month[-1]  
         
         if (time is None or date is None or name is None):
             self.speak_dialog('confirm.without.variables')
         else:
             self.speak_dialog('confirm_arzttermin', data={'time' : time, 'date': date, 'name': name})
-
+        """
     """
     @intent_handler('DeleteReminderForDay.intent')
     def remove_reminders_for_day(self, msg=None):
@@ -490,6 +490,28 @@ class ArztterminSkillOhneRichtlinie(MycroftSkill):
             self.bus.remove('mycroft.skill.handler.complete', self.notify)
             self.bus.remove('mycroft.skill.handler.start', self.reset)
 
+
+    @intent_handler('RequestAllInformations.intent')
+    def handleAllInformations(self, message):
+        time = message.data.get('time')
+        date = message.data.get('date')
+        name = message.data.get('name')
+
+        if (time is None):
+            pass
+        if (date is None):
+            pass
+        if (name is None):
+            pass
+
+        if (time is not None and date is not None and Name is not None):
+            self.speak_dialog('confirm_arzttermin', date={
+                'time': time,
+                'date':date,
+                'name':name
+            })
+        else:
+            self.speak_dialog('confirm.without.variables')
 
 def create_skill():
     return ArztterminSkillOhneRichtlinie()
