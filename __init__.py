@@ -498,13 +498,13 @@ class ArztterminSkillOhneRichtlinie(MycroftSkill):
         name = message.data.get('name')
 
         if (time is None):
-            pass
+            self.speak_dialog('debug', data={'debug':'time is None'})
         if (date is None):
-            pass
+            self.speak_dialog('debug', data={'debug':'date is None'})
         if (name is None):
-            pass
+            self.speak_dialog('debug', data={'debug':'name is None'})
 
-        if (time is not None and date is not None and Name is not None):
+        if (time is not None and date is not None and name is not None):
             self.speak_dialog('confirm_arzttermin', date={
                 'time': time,
                 'date':date,
