@@ -505,7 +505,7 @@ class ArztterminSkillOhneRichtlinie(MycroftSkill):
             self.speak_dialog('debug', data={'debug':'name is None'})
 
         if (time is not None and date is not None and name is not None):
-            self.speak_dialog('confirm_arzttermin', date={
+            self.speak_dialog('confirm_arzttermin', data={
                 'time': time,
                 'date':date,
                 'name':name
