@@ -9,3 +9,9 @@ ich habe (ihn|den) (arzttermin|termin|) (am {date}| um {time}) (am {date}| um {t
 (der|mein|er) (termin|arzttermin|) ist am {date} 
 (der|mein|er) (termin|arzttermin|) ist um {time} uhr
 (der|mein|er) (termin|arzttermin|) ist bei {name}
+der (arzttermin|termin) ist um {time} uhr am {date}
+der (arzttermin|termin) ist um {time} uhr bei {name}
+der (arzttermin|termin) ist am {date} um {time} uhr
+der (arzttermin|termin) ist am {date} bei {name}
+der (arzttermin|termin) ist bei {name} am {date}
+der (arzttermin|termin) ist bei {name} um {time} uhr
