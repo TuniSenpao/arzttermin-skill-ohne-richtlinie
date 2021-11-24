@@ -27,16 +27,10 @@ from mycroft.messagebus.client import MessageBusClient
 class ArztterminSkillOhneRichtlinie(MycroftSkill):
     def __init__(self):
         super(ArztterminSkillOhneRichtlinie, self).__init__()
-        self.notes = {}
-        self.primed = False
 
     def initialize(self):
-        # Handlers for notifications after speak
-        # TODO Make this work better in test
-        if isinstance(self.bus, MessageBusClient):
-            self.bus.on('speak', self.prime)
-            self.bus.on('mycroft.skill.handler.complete', self.notify)
-            self.bus.on('mycroft.skill.handler.start', self.reset)
+        pass
+            
 
     @intent_handler('Reminder.intent')
     def add_unspecified_reminder(self, msg=None):
@@ -72,10 +66,7 @@ class ArztterminSkillOhneRichtlinie(MycroftSkill):
             return False
 
     def shutdown(self):
-        if isinstance(self.bus, MessageBusClient):
-            self.bus.remove('speak', self.prime)
-            self.bus.remove('mycroft.skill.handler.complete', self.notify)
-            self.bus.remove('mycroft.skill.handler.start', self.reset)
+        pass
 
 
     
