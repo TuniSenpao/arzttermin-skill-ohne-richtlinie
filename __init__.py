@@ -14,7 +14,7 @@
 
 from datetime import datetime, timedelta
 from mycroft import MycroftSkill, intent_handler
-from mycroft.util.parse import extract_number
+from mycroft.util.parse import extract_number, extract_datetime
 
 
 class ArztterminSkillOhneRichtlinie(MycroftSkill):
@@ -36,28 +36,38 @@ class ArztterminSkillOhneRichtlinie(MycroftSkill):
         name = message.data.get('name')
 
         if (time is None):
-            while(time is None):
-                time_response = self.get_response('ParticularTimeAgain', on_fail='wait.for.answer', num_retries=20)
-                dt = extract_number(time_response)
-                time = datetime.strftime(dt, "%H:%M")
+            time_response = self.get_response('ParticularTime', on_fail='wait.for.answer', num_retries=20)
+            # Check if a time was in the response
+            dt, rest = extract_datetime(time_response) or (None, None)
+            if dt or self.response_is_affirmative(time_response):
+                if not dt:
+                    # No time specified
+                    time = self.get_response('ParticularTime', on_fail='wait.for.answer', num_retries=20) or ''
+                    dt, rest = extract_datetime(time) or None, None
+                    if not dt:
+                        self.speak_dialog('Fine')
+                        return
+                # self.__save_reminder_local(time, dt)
+            else:
+                self.log.debug('put into general reminders')
+                # self.__save_unspecified_reminder(reminder)
         if (date is None):
-            while(date is None):
-                date = None
-                date_response = self.get_response('ParticularDateAgain', on_fail='wait.for.answer', num_retries=20)
-                months = ['januar', 'februar','märz', 'april', 'mai', 'juni', 'juli', 'august', 'september','oktober','november','dezember',
-                    'januar.', 'februar.','märz.', 'april.', 'mai.', 'juni.', 'juli.', 'august.', 'september.','oktober.','november.','dezember.', '. erster', '. ersten', '. zweiter','. zweiten' ,'. dritter', '. dritten','. 3','. 4','. 5','. 6','. 7','. 8','. 9','. 10','. 11','. 12','. 13','. 14','. 15',
-                    '. 16','. 17','. 18','. 19','. 20','. 21','. 22','. 23','. 24','. 25','. 26','. 27','. 28','. 29','. 30','. 31']
-                days = ['erster', 'ersten', 'zweiter','zweiten' ,'dritter', 'dritten','3','4','5','6','7','8','9','10','11','12','13','14','15',
-                    '16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31']
-                day = [d for d in days if(d in date_response.lower())]
-                month = [m for m in months if(m in date_response.lower())]
+            date = None
+            date_response = self.get_response('ParticularDateAgain', on_fail='wait.for.answer', num_retries=20)
+            months = ['januar', 'februar','märz', 'april', 'mai', 'juni', 'juli', 'august', 'september','oktober','november','dezember',
+                'januar.', 'februar.','märz.', 'april.', 'mai.', 'juni.', 'juli.', 'august.', 'september.','oktober.','november.','dezember.', '. erster', '. ersten', '. zweiter','. zweiten' ,'. dritter', '. dritten','. 3','. 4','. 5','. 6','. 7','. 8','. 9','. 10','. 11','. 12','. 13','. 14','. 15',
+                '. 16','. 17','. 18','. 19','. 20','. 21','. 22','. 23','. 24','. 25','. 26','. 27','. 28','. 29','. 30','. 31']
+            days = ['erster', 'ersten', 'zweiter','zweiten' ,'dritter', 'dritten','3','4','5','6','7','8','9','10','11','12','13','14','15',
+                '16','17','18','19','20','21','22','23','24','25','26','27','28','29','30','31']
+            day = [d for d in days if(d in date_response.lower())]
+            month = [m for m in months if(m in date_response.lower())]
 
-                if (bool(day) and bool(month)):
-                    date = day[-1] + '. ' + month[-1]
+            if (bool(day) and bool(month)):
+                date = day[-1] + '. ' + month[-1]
+        
         if (name is None):
-            while(name is None):
-                name = self.get_response('ParticularNameAgain', on_fail='wait.for.answer', num_retries=20)
-                name = name.lower().replace('der', '').replace('termin', '').replace('ist', '').replace('bei', '').replace('er heißt', '').replace('ich', '').replace('glaube', '').replace('dieser', '').replace('mein', '').replace('arzttermin', '').replace('arzt', '').replace('ärztin', '')
+            name = self.get_response('ParticularNameAgain', on_fail='wait.for.answer', num_retries=20)
+            name = name.lower().replace('der', '').replace('termin', '').replace('ist', '').replace('bei', '').replace('er heißt', '').replace('ich', '').replace('glaube', '').replace('dieser', '').replace('mein', '').replace('arzttermin', '').replace('arzt', '').replace('ärztin', '')
 
         if (time is not None and date is not None and name is not None):
             self.speak_dialog('confirm_arzttermin', data={
