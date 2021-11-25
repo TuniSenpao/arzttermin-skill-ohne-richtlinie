@@ -46,13 +46,15 @@ class ArztterminSkillOhneRichtlinie(MycroftSkill):
             while(time is None):
                 time_response = self.get_response('ParticularTimeAgain', on_fail='wait.for.answer', num_retries=20)
                 # Check if a time was in the response
-                dt, rest = extract_datetime(time_response) or (None, None)
-                if dt or self.response_is_affirmative(time_response):
-                    if not dt:
-                        # No time specified
-                        time = self.get_response('ParticularTime', on_fail='wait.for.answer', num_retries=20) or ''
-                        dt, rest = extract_datetime(time) or None, None
-
+                try:
+                    dt, rest = extract_datetime(time_response) or (None, None)
+                    if dt or self.response_is_affirmative(time_response):
+                        if not dt:
+                            # No time specified
+                            time = self.get_response('ParticularTime', on_fail='wait.for.answer', num_retries=20) or ''
+                            dt, rest = extract_datetime(time) or None, None
+                except:
+                    pass
             time = datetime.strftime(dt, "%H:%M")
         if (date is None):
             while(date is None):
