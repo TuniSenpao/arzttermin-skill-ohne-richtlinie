@@ -12,16 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import re
-import time
-from os.path import dirname, join
 from datetime import datetime, timedelta
 from mycroft import MycroftSkill, intent_handler
-from mycroft.util.parse import extract_datetime, normalize
-from mycroft.util.time import now_local
-from mycroft.util.format import nice_time, nice_date
-from mycroft.util import play_wav
-from mycroft.messagebus.client import MessageBusClient
+from mycroft.util.parse import extract_number
 
 
 class ArztterminSkillOhneRichtlinie(MycroftSkill):
@@ -46,15 +39,10 @@ class ArztterminSkillOhneRichtlinie(MycroftSkill):
             while(time is None):
                 time_response = self.get_response('ParticularTimeAgain', on_fail='wait.for.answer', num_retries=20)
                 # Check if a time was in the response
-                try:
-                    dt, rest = extract_datetime(time_response) or (None, None)
-                    if dt or self.response_is_affirmative(time_response):
-                        if not dt:
-                            # No time specified
-                            time = self.get_response('ParticularTime', on_fail='wait.for.answer', num_retries=20) or ''
-                            dt, rest = extract_datetime(time) or None, None
-                except:
-                    pass
+                
+                dt = extract_number(time_response)
+               
+                
             time = datetime.strftime(dt, "%H:%M")
         if (date is None):
             while(date is None):
