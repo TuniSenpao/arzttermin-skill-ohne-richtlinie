@@ -38,12 +38,8 @@ class ArztterminSkillOhneRichtlinie(MycroftSkill):
         if (time is None):
             while(time is None):
                 time_response = self.get_response('ParticularTimeAgain', on_fail='wait.for.answer', num_retries=20)
-                # Check if a time was in the response
-                
                 dt = extract_number(time_response)
-               
-                
-            time = datetime.strftime(dt, "%H:%M")
+                time = datetime.strftime(dt, "%H:%M")
         if (date is None):
             while(date is None):
                 date = None
