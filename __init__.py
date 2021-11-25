@@ -36,6 +36,7 @@ class ArztterminSkillOhneRichtlinie(MycroftSkill):
         name = message.data.get('name')
 
         if (time is None):
+            # TIME:
             time_response = self.get_response('ParticularTime', on_fail='wait.for.answer', num_retries=20)
             # Check if a time was in the response
             dt, rest = extract_datetime(time_response) or (None, None)
@@ -47,10 +48,8 @@ class ArztterminSkillOhneRichtlinie(MycroftSkill):
                     if not dt:
                         self.speak_dialog('Fine')
                         return
-                # self.__save_reminder_local(time, dt)
-            else:
-                self.log.debug('put into general reminders')
-                # self.__save_unspecified_reminder(reminder)
+
+            time = datetime.strftime(dt, "%H:%M")
         if (date is None):
             date = None
             date_response = self.get_response('ParticularDateAgain', on_fail='wait.for.answer', num_retries=20)
